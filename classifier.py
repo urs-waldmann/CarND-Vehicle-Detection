@@ -11,6 +11,7 @@ import time
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
 from skimage.feature import hog
 
 ##########################
@@ -68,13 +69,20 @@ def extract_features(imgs, cspace, spatial_size, hist_bins, hist_range, orient, 
                 feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
             elif cspace == 'YCrCb':
                 feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2YCrCb)
-        else: feature_image = np.copy(image)      
+        else: feature_image = np.copy(image)
+        ###################################################################
+        # OPTIONAL: Use also histograms of color and binned color features.
+        ###################################################################
+        ##################################################################################
         # Apply bin_spatial() to get spatial color features.
-        spatial_features = bin_spatial(feature_image, size=spatial_size)
-        # Apply color_hist() also with a color space option now.
-        hist_features = color_hist(feature_image, nbins=hist_bins, bins_range=hist_range)
+        #spatial_features = bin_spatial(feature_image, size=spatial_size)
         # Append the new feature vector to the features list.
-        features.append(np.concatenate((spatial_features, hist_features)))
+        #features.append(spatial_features)
+        # Apply color_hist() also with a color space option now.
+        #hist_features = color_hist(feature_image, nbins=hist_bins, bins_range=hist_range)
+        # Append the new feature vector to the features list.
+        #features.append(hist_features)
+        ##################################################################################
         # Call get_hog_feature.
         ##################################
         # Parameters: vis and feature_vec.
@@ -147,7 +155,6 @@ scaled_X = X_scaler.transform(X)
 # Define the labels vector.
 y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
 
-'''
 #############
 # Classifier.
 #############
@@ -155,13 +162,14 @@ y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
 rand_state = np.random.randint(0, 100)
 X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, test_size=0.2, random_state=rand_state)
 # Print data information.
-print('Using spatial binning of:',spatial, ', ', histbin,'histogram bins, ', orient, 'orientations, ', pix_per_cell, 'pixels per cell and', cell_per_block,'cells per block.')
+#print('Using spatial binning of:',spatial, ', ', histbin,'histogram bins, ', orient, 'orientations, ', pix_per_cell, 'pixels per cell and', cell_per_block,'cells per block.')
+print('Using', orient, 'orientations, ', pix_per_cell, 'pixels per cell and', cell_per_block,'cells per block.')
 print('Feature vector length:', len(X_train[0]), '.')
 
 # Use a SVC with GridSearch(). 
 parameters = {'kernel':('linear', 'rbf'), 'C':[0.1, 1, 10], 'gamma':[1, 100, 1000]}
 svr = svm.SVC()
-clf = grid_search.GridSearchCV(svr, parameters)
+clf = GridSearchCV(svr, parameters)
 # Check the training time for the SVC.
 t=time.time()
 clf.fit(X_train, y_train)
@@ -176,4 +184,3 @@ print('My SVC predicts: ', svc.predict(X_test[0:n_predict]))
 print('For these',n_predict, 'labels: ', y_test[0:n_predict])
 t2 = time.time()
 print(round(t2-t, 5), ' seconds to predict', n_predict,' labels with SVC')
-'''
