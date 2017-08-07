@@ -7,7 +7,7 @@ import numpy as np
 import cv2
 import glob
 import time
-#from sklearn.svm import LinearSVC
+from sklearn.svm import LinearSVC
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -118,6 +118,11 @@ for image in images:
 notcars = notcars[0:len(cars)]
 #print('New number of non-car images: ', len(notcars))
 
+# Reduce number of images for test runs
+#test_number = 500
+#cars = cars[0:test_number]
+#notcars = notcars[0:test_number]
+
 t2 = time.time()
 print(round(t2-t, 2), ' seconds to read in images.')
 
@@ -166,15 +171,13 @@ X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, test_size=0.2, 
 print('Using', orient, 'orientations, ', pix_per_cell, 'pixels per cell and', cell_per_block,'cells per block.')
 print('Feature vector length:', len(X_train[0]), '.')
 
-# Use a SVC with GridSearch(). 
-parameters = {'kernel':('linear', 'rbf'), 'C':[0.1, 1, 10], 'gamma':[1, 100, 1000]}
-svr = svm.SVC()
-clf = GridSearchCV(svr, parameters)
+# Use a linear SVC. 
+svc = LinearSVC()
 # Check the training time for the SVC.
 t=time.time()
-clf.fit(X_train, y_train)
+svc.fit(X_train, y_train)
 t2 = time.time()
-print(round(t2-t, 2), ' seconds to train SVC.')
+print(round(t2-t, 2), 'Seconds to train SVC...')
 # Check the score of the SVC.
 print('Test Accuracy of SVC = ', round(svc.score(X_test, y_test), 4))
 # Check the prediction time for a single sample.
@@ -183,4 +186,26 @@ n_predict = 10
 print('My SVC predicts: ', svc.predict(X_test[0:n_predict]))
 print('For these',n_predict, 'labels: ', y_test[0:n_predict])
 t2 = time.time()
+print(round(t2-t, 5), 'Seconds to predict', n_predict,'labels with SVC')
+
+'''
+# Use a SVC with GridSearch(). 
+#parameters = {'kernel':('linear', 'rbf'), 'C':[0.1, 1, 10], 'gamma':[1, 100, 1000]}
+parameters = {'kernel':['linear'], 'C':[0.1, 1, 10], 'gamma':[1, 100, 1000]}
+svr = svm.SVC()
+clf = GridSearchCV(svr, parameters)
+# Check the training time for the SVC.
+t=time.time()
+clf.fit(X_train, y_train)
+t2 = time.time()
+print(round(t2-t, 2), ' seconds to train SVC.')
+# Check the score of the SVC.
+print('Test Accuracy of SVC = ', round(svr.score(X_test, y_test), 4))
+# Check the prediction time for a single sample.
+t=time.time()
+n_predict = 10
+print('My SVC predicts: ', svr.predict(X_test[0:n_predict]))
+print('For these',n_predict, 'labels: ', y_test[0:n_predict])
+t2 = time.time()
 print(round(t2-t, 5), ' seconds to predict', n_predict,' labels with SVC')
+'''
