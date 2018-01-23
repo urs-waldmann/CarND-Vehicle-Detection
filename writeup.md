@@ -26,9 +26,9 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 ![Example of a vehicle and non-vehicle](./output_images/car_notcar.png)
 
-I then explored different color spaces and different `skimage.feature.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+I then explored different color spaces and different `skimage.feature.hog()` parameters (`orient`, `pix_per_cell`, and `cell_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.feature.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YCrCb` color space and HOG parameters of `orient=9`, `pix_per_cell=(8, 8)` and `cell_per_block=(2, 2)`:
 
 ![Example of a HOG visualization](./output_images/HOG_visualization.png)
 
@@ -40,7 +40,7 @@ I tried various combinations of parameters and chose the combination that gave m
 
 | Parameter     | Value	        | 
 |:-------------:|:-------------:| 
-| Color space      | 'YCrCb'        | 
+| `Color space`      | 'YCrCb'        | 
 | HOG orientations      | 9        |
 | HOG pixels per cell      | 8      |
 | HOG cells per block     | 2      |
