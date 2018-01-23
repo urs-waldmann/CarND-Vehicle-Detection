@@ -3,7 +3,7 @@
 
 The goals / steps of this project are the following:
 
-* Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier Linear SVM classifier
+* Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a Linear SVM classifier
 * Optionally, you can also apply a color transform and append binned color features, as well as histograms of color, to your HOG feature vector. 
 * Note: for those first two steps don't forget to normalize your features and randomize a selection for training and testing.
 * Implement a sliding-window technique and use your trained classifier to search for vehicles in images.
@@ -15,13 +15,10 @@ The goals / steps of this project are the following:
 In the following discussion I will consider the [rubric points](https://review.udacity.com/#!/rubrics/513/view) individually and describe how I addressed each point in my implementation. The link to my GitHub repository can be found [here](https://github.com/urs-waldmann/CarND-Vehicle-Detection). 
 
 ---
-###Writeup / README
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+In general I used to different versions of code. For my test runs on single images I used the files "search_and_classify.py" and "helper_functions.py" that I ran in my terminal and where I restricted the number of car and not-car images to 500. With this implementation I tested all my features on the single images provided and saved images for this writeup. Having a working code implementation I imported the needed pieces of code from those two files to the final Jupyter notebook "vehicle_detection.ipynb". Here I extracted features from the whole car and not-car images provided and ran my implementaion on the "test_video.mp4" and later on my final "project_video_2.mp4" that I created in the "Advanced Lane Finding" project.
 
-You're reading it!
-
-###Histogram of Oriented Gradients (HOG)
+## Histogram of Oriented Gradients (HOG)
 
 ####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
