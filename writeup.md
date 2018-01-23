@@ -20,25 +20,33 @@ In general I used to different versions of code. For my test runs on single imag
 
 ## Histogram of Oriented Gradients (HOG)
 
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
-
 The code for this step is contained in lines 1 through 123 of the file called `search_and_classify.py`).  
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
-Example of a vehicle and non-vehicle:
 ![Example of a vehicle and non-vehicle](./output_images/car_notcar.png)
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+I then explored different color spaces and different `skimage.feature.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YCrCb` color space and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
+![Example of a HOG visualization](./output_images/HOG_visualization.png)
 
-![alt text][image2]
+In addition to the histogram of orientated gradients I explored histograms of color and spatial binnings of color in order to use them as featurers for my classifier.
 
-####2. Explain how you settled on your final choice of HOG parameters.
+## Choice of parameters
 
-I tried various combinations of parameters and...
+I tried various combinations of parameters and chose the combination that gave me the best results training my classifier. My choice of parameters for the features mentioned above are:
+
+| Parameter     | Value	        | 
+|:-------------:|:-------------:| 
+| Color space      | 'YCrCb'        | 
+| HOG orientations      | 9        |
+| HOG pixels per cell      | 8      |
+| HOG cells per block     | 2      |
+| HOG channel | "ALL" |
+| Spatial binning dimensions | (8,8) |
+| Number of histogram bins | 64 |
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
