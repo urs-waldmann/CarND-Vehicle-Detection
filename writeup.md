@@ -16,17 +16,18 @@ In the following discussion I will consider the [rubric points](https://review.u
 
 ---
 
-In general I used to different versions of code. For my test runs on single images I used the files "search_and_classify.py" and "helper_functions.py" that I ran in my terminal and where I restricted the number of car and not-car images to 500. With this implementation I tested all my features on the single images provided and saved images for this writeup. Having a working code implementation I imported the needed pieces of code from those two files to the final Jupyter notebook "vehicle_detection.ipynb". Here I extracted features from the whole car and not-car images provided and ran my implementaion on the "test_video.mp4" and later on my final "project_video_2.mp4" that I created in the "Advanced Lane Finding" project.
+In general I used to different versions of code. For my test runs on single images I used the files `search_and_classify.py` and `helper_functions.py` that I ran in my terminal and where I restricted the number of `vehicle` and `non-vehicle` images to 500. With this implementation I tested all my features on the single images provided and saved images for this writeup. Having a working code implementation I imported the needed pieces of code from those two files to the final Jupyter notebook `vehicle_detection.ipynb`. Here I extracted features from the whole car and not-car images provided and ran my implementaion on the `test_video.mp4` and later on my final `project_video_2.mp4` that I created in the "Advanced Lane Finding" project. For simplicity I will refer in this writeup to the two files `search_and_classify.py` and `helper_functions.py` and if necessary I will specify why some functions didn't make it into the final Jupyter notebook `vehicle_detection.ipynb`.
 
 ## Histogram of Oriented Gradients (HOG)
 
 ####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in lines 1 through 123 of the file called `search_and_classify.py`).  
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
-![alt text][image1]
+Example of a vehicle and non-vehicle:
+![Example of a vehicle and non-vehicle](./output_images/car_notcar)
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
