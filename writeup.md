@@ -78,8 +78,10 @@ that heat map to identify vehicle positions. I then used `scipy.ndimage.measurem
 
 Here are example results showing the bounding boxes of the sliding window search, the heat map, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on all the test images provided:
 
-Test image 1:
+
 ![Test image 1](./output_images/test1_heatmap_label_car_position.png)
+Test image 1:
+
 
 Test image 2:
 ![Test image 2](./output_images/test2_heatmap_label_car_position.png)
