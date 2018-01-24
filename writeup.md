@@ -56,7 +56,7 @@ I trained a linear SVM using `sklearn.svm.LinaerSVC()`. In order to get the best
 ```python
 parameters = {'C':[0.1, 1, 10]}
 ```
-I obtained `C=0.1` being the best fit for my model with an accuracy of ```python 98.76%```.
+I obtained `C=0.1` being the best fit for my model with an accuracy of 98.76%.
 
 ## Sliding Window Search
 
@@ -68,15 +68,15 @@ In oder to find the best values for the parameter `scales` I performed test runs
 parameters = [1.2, 1.5]
 ```
 Therefore I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.
-Furthermore I extended the function `find_cars()`. My edited function outputs the bounding boxes of the sliding window search for cars and the corresponding heat map. Thus I recorded the positions of positive detections in each image.  From the positive detections I created a heatmap.
+Furthermore I extended the function `find_cars()`. My edited function outputs the bounding boxes of the sliding window search for cars and the corresponding heat map. Thus I recorded the positions of positive detections in each image.  From the positive detections I created a heat map.
 
 In a next step I thresholded with:
 ```python
 threshold = 2
 ```
-that heat map to identify vehicle positions. I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle. I constructed bounding boxes to cover the area of each blob detected to identify the position of each car.
+that heat map to identify vehicle positions. I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heat map.  I then assumed each blob corresponded to a vehicle. I constructed bounding boxes to cover the area of each blob detected to identify the position of each car.
 
-Here are example results showing the bounding boxes of the sliding window search, the heatmap, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on all the images provided:
+Here are example results showing the bounding boxes of the sliding window search, the heat map, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on all the test images provided:
 
 Test image 1:
 ![Test image 1](./output_images/test1_heatmap_label_car_position.png)
@@ -108,8 +108,8 @@ Here's a [link to my video result](./final_project_video.mp4). Enjoy!
 
 As we can see in the final project video provided in the previous section, my pipeline works well on the project video. The bounding boxes are sometimes wabbly and there are really few false positives. In this section I want to adress some of the reasons. Please note that this list of troubleshooting points is not complete.
 
-First of all the car images provided are almost all pictures taken from behind the car. Thus my classifier is biased towards the back of cars and does not recognize well e.g. the side of a car. In the project video however there are several frames where the white car appears on the side. That is the reason why sometimes the pipeline detects "two small cars", i.e. to small bounding boxes next to each other and not a single big one fitting the whole white car. By augmenting the 
+First of all the car images provided are almost all pictures taken from behind the car. Thus my classifier is biased towards the back of cars and does not recognize well e.g. the side of a car. In the project video however there are several frames where the white car appears on the side. That is the reason why sometimes the pipeline detects "two small cars", i.e. to small bounding boxes next to each other and not a single big one fitting the whole white car. Augmenting the vehicle images by images of different perspectives of a car helps to solve this problem.
 Furthermore I only tried a linear SVM. Although I used `sklearn.model_selection.GridSearchCV()` to find the best parameter `C` I did not test other classifiers.
-In addition the accuracy of my linear SVM varied between 98% and 100% and thus the result not stable. By choosing a better composition of a feature vector I could have stabilized the accuracy of my classifier.
-Another problem was the sliding window serach. By using two scales on the whole image I got the cars in each frame. But to improve the wabbly bounding boxes and eliminate all false positives I should have used different scales together with different thresholds in different parts of the image. Regarding this problem instead of restricting the area of each frame where to search for cars only from `ystart` to `ystop` I should have restricted the area to a trapezoid fitting the lanes.
+In addition the accuracy of my linear SVM varied between 98% and 100% and thus the result is not stable. By choosing a better composition of a feature vector I could have stabilized the accuracy of my classifier.
+Another problem was the sliding window serach. By using two scales on the whole image I got the cars in each frame. But to improve the wabbly bounding boxes and eliminate all false positives I should have used different scales together with different thresholds in different parts of the image. Regarding this problem instead of restricting the area of each frame where to search for cars only from `ystart` to `ystop` as discussed in the section *Sliding Windows Search* I should have restricted the area to a trapezoid fitting the lanes.
 
