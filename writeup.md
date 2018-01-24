@@ -56,7 +56,7 @@ I trained a linear SVM using `sklearn.svm.LinaerSVC()`. In order to get the best
 ```python
 parameters = {'C':[0.1, 1, 10]}
 ```
-I obtained `C=0.1` being the best fit for my model with an accuracy of 98.76%.
+I obtained `C=0.1` being the best fit for my model with an accuracy of 98.45%.
 
 ## Sliding Window Search
 
@@ -78,24 +78,16 @@ that heat map to identify vehicle positions. I then used `scipy.ndimage.measurem
 
 Here are example results showing the bounding boxes of the sliding window search, the heat map, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on all the test images provided:
 
-
 ![Test image 1](./output_images/test1_heatmap_label_car_position.png)
-Test image 1:
 
-
-Test image 2:
 ![Test image 2](./output_images/test2_heatmap_label_car_position.png)
 
-Test image 3:
 ![Test image 3](./output_images/test3_heatmap_label_car_position.png)
 
-Test image 4:
 ![Test image 4](./output_images/test4_heatmap_label_car_position.png)
 
-Test image 5:
 ![Test image 5](./output_images/test5_heatmap_label_car_position.png)
 
-Test image 6:
 ![Test image 6](./output_images/test6_heatmap_label_car_position.png)
 
 ## Video Implementation
