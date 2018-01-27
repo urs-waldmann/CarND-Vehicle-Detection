@@ -52,11 +52,7 @@ I tried various combinations of parameters and chose the combination that gave m
 
 The code for this step is contained in the Jupyter notebook `vehicle_detection.ipynb` in section *Train classifier*.
 
-I trained a linear SVM using `sklearn.svm.LinaerSVC()`. In order to get the best result for my classifier without exploring the best parameters manually I used `sklearn.model_selection.GridSearchCV()`. Since I am using a linear SVM I can only tune the parameter `C`. Using `sklearn.model_selection.GridSearchCV()` with
-```python
-parameters = {'C':[0.1, 1, 10]}
-```
-I obtained `C=0.1` being the best fit for my model with an accuracy of 98.45%.
+I trained a linear SVM using `sklearn.svm.LinaerSVC()`. In order to get the best result for my classifier without exploring the best parameters manually I used `sklearn.model_selection.GridSearchCV()`. Since I am using a linear SVM I can only tune the parameter `C`. Using `sklearn.model_selection.GridSearchCV()` I obtained `C=0.00006` being the best fit for my model with an accuracy of 98.87%.
 
 ## Sliding Window Search
 
@@ -65,14 +61,14 @@ The code for this step is contained in the Jupyter notebook `vehicle_detection.i
 To implement a sliding window search I used the function `find_cars()` from the course material. This function can be found in the section *Helper functions* of my Jupyter notebook. This function basically searches a specified part of an image for cars. The area where to look for cars is restricted by the parameters `ystart` and `ystop`. The function searches an image for cars by sliding windows of the same shape over the specified area. Each sliding window extracts features and decides based on the extracted features whether there is a car or not in the sliding window. The overlap of the sliding windows is given by the parameter `scales`.
 In oder to find the best values for the parameter `scales` I performed test runs with different values on the test images. I finally found the best values to be:
 ```python
-parameters = [1.2, 1.5]
+parameters = [0.8, 1.1, 1.5]
 ```
-Therefore I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.
+Thus I searched on three scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.
 Furthermore I extended the function `find_cars()`. My edited function outputs the bounding boxes of the sliding window search for cars and the corresponding heat map. Thus I recorded the positions of positive detections in each image.  From the positive detections I created a heat map.
 
 In a next step I thresholded with:
 ```python
-threshold = 2
+threshold = 1
 ```
 that heat map to identify vehicle positions. I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heat map.  I then assumed each blob corresponded to a vehicle. I constructed bounding boxes to cover the area of each blob detected to identify the position of each car.
 
@@ -94,7 +90,11 @@ Here are example results showing the bounding boxes of the sliding window search
 
 The code for this step is contained in the Jupyter notebook `vehicle_detection.ipynb` in section *Run on videos*.
 
-I copied the pipeline for the single images into a function called `process_image()`. The code lines to edit and save the video clip is basically from the *Finding Lane Lines* project. I added the code in order to fit it to the current implementation.
+I copied the pipeline for the single images into a function called `process_image()`.
+As we can see from the images above there are still false positives and multiple detections of the same car. That is why I added a method to `process_image()` where I sum the heat map of subsequent frames. To store the heat maps I used `collections.deque()`. Since I am summing up heat maps of subsequent frames I needed to adjust the threshold accordingly.
+
+The code lines to edit and save the video clip is basically from the *Finding Lane Lines* project. I added the code in order to fit it to the current implementation.
+
 Instead of using the project video I used my final project video from the *Advanced Lane Finding* project.
 Here's a [link to my video result](./final_project_video.mp4). Enjoy!
 
@@ -102,8 +102,12 @@ Here's a [link to my video result](./final_project_video.mp4). Enjoy!
 
 As we can see in the final project video provided in the previous section, my pipeline works well on the project video. The bounding boxes are sometimes wabbly and there are really few false positives. In this section I want to adress some of the reasons. Please note that this list of troubleshooting points is not complete.
 
-First of all the car images provided are almost all pictures taken from behind the car. Thus my classifier is biased towards the back of cars and does not recognize well e.g. the side of a car. In the project video however there are several frames where the white car appears on the side. That is the reason why sometimes the pipeline detects "two small cars", i.e. to small bounding boxes next to each other and not a single big one fitting the whole white car. Augmenting the vehicle images by images of different perspectives of a car helps to solve this problem.
-Furthermore I only tried a linear SVM. Although I used `sklearn.model_selection.GridSearchCV()` to find the best parameter `C` I did not test other classifiers.
-In addition the accuracy of my linear SVM varied between 98% and 100% and thus the result is not stable. By choosing a better composition of a feature vector I could have stabilized the accuracy of my classifier.
-Another problem was the sliding window serach. By using two scales on the whole image I got the cars in each frame. But to improve the wabbly bounding boxes and eliminate all false positives I should have used different scales together with different thresholds in different parts of the image. Regarding this problem instead of restricting the area of each frame where to search for cars only from `ystart` to `ystop` as discussed in the section *Sliding Windows Search* I should have restricted the area to a trapezoid fitting the lanes.
+First of all the car images provided are almost all pictures taken from behind the car. Thus my classifier is biased towards the back of cars and does not recognize well e.g. the side of a car. When a car that is overkaing enters the view of the camera, in the first moment we see only the side of this car. That is the reason why in this cases the pipeline detects "two small cars", i.e. to small bounding boxes next to each other and not a single big one fitting the car. Augmenting the vehicle images by images of different perspectives of a car helps to solve this problem.
 
+Furthermore I only tried a decision tree and a linear SVM. Although I used `sklearn.model_selection.GridSearchCV()` to find the best parameter `C` I did not test other classifiers.
+
+In addition the accuracy of my linear SVM varied between 98% and 100% and thus the result is not stable. By choosing a better composition of a feature vector I could have stabilized the accuracy of my classifier.
+
+Another problem was the sliding window serach. By using two scales on the whole image I got the cars in each frame. But to improve to eliminate all false positives I should have used different scales together with different thresholds in different parts of the image. Regarding this problem instead of restricting the area of each frame where to search for cars only from `ystart` to `ystop` as discussed in the section *Sliding Windows Search* I should have restricted the area to a trapezoid fitting the lanes.
+
+A huge problem is that this implementation is not processing images in real time at all.
